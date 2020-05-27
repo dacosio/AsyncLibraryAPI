@@ -1,10 +1,43 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Library.Api.Filters;
+using Library.API.Services;
+using Microsoft.AspNetCore.Mvc;
+
 namespace Library.API.Controllers
 {
-    public class BooksController
+    [ApiController]
+    [Route("api/books")]
+    public class BooksController : ControllerBase
     {
-        public BooksController()
+        private readonly IBooksRepository _booksRepository;
+        public BooksController(IBooksRepository booksRepository)
         {
+            _booksRepository = booksRepository ?? throw new ArgumentException(nameof(booksRepository));
+        }
+
+
+        [HttpGet]
+        [BooksResultFilter]
+        public async Task<IActionResult> GetBooks()
+        {
+            var books = await _booksRepository.GetBooksAsync();
+
+            return Ok(books);
+        }
+
+
+        [HttpGet]
+        [BooksResultFilter]
+        public async Task<IActionResult> GetBook(Guid id)
+        {
+            var book = await _booksRepository.GetBookAsync(id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(book);
         }
     }
 }
