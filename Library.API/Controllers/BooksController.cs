@@ -48,6 +48,7 @@ namespace Library.API.Controllers
 
 
         [HttpPost]
+        [BookResultFilter]
         public async Task<IActionResult> CreateBook([FromBody] BookForCreation book)
         {
             if (!ModelState.IsValid)
@@ -58,6 +59,8 @@ namespace Library.API.Controllers
             var bookEntity = _mapper.Map<Entities.Book>(book);
             _booksRepository.AddBook(bookEntity);
             await _booksRepository.SaveChangesAsync();
+
+            await _booksRepository.GetBookAsync(bookEntity.Id);
 
             return CreatedAtRoute("GetBook", new { bookEntity.Id }, bookEntity);
         }
