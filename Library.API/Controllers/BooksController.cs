@@ -34,7 +34,7 @@ namespace Library.API.Controllers
 
         [HttpGet]
         [BooksResultFilter]
-        [Route("id", Name = "GetBook")]
+        [Route("{id}", Name = "GetBook")]
         public async Task<IActionResult> GetBook(Guid id)
         {
             var book = await _booksRepository.GetBookAsync(id);
