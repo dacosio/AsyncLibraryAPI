@@ -44,5 +44,21 @@ namespace Library.API.Services
         {
             return await _booksContext.Books.Include(b=>b.Author).ToListAsync();
         }
+
+        public void AddBook(Book book)
+        {
+            if (book == null)
+            {
+                throw new ArgumentNullException(nameof(book));
+            }
+
+            _booksContext.Add(book);
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            //return true if 1 or more entities were changed
+            return (await _booksContext.SaveChangesAsync() > 0);
+        }
     }
 }
